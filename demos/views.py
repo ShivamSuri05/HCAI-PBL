@@ -19,6 +19,7 @@ def upload_csv(request):
     error = None
 
     if request.method == 'POST':
+        print(request.FILES)
         form = CSVUploadForm(request.POST, request.FILES)
         if form.is_valid():
             file = request.FILES['file']

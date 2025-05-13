@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+
+{%  load static %}
+
+
+{% block content %}
+
+<div class="box">
+    <div class="title-container">
+        <div class = "title">Upload a CSV File</div>
+    </div>
+
+    <div class="main-text">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Upload</button>
+        </form>
+          <div>
+            {% if model_type is not None %}
+                <p><i>{{ model_type }}</i></p>
+                <div class="btn-group">
+                    <button onclick="showDiv('classificationDiv')">Classification</button>
+                    <button onclick="showDiv('regressionDiv')">Regression</button>
+                </div>
+                <!-- Div for Classification -->
+                <div id="classificationDiv" class="toggleDiv" style="display: none;">
+                    <p>This is the classification model section.</p>
+                </div>
+
+                <!-- Div for Regression -->
+                <div id="regressionDiv" class="toggleDiv" style="display: none;">
+                    <p>This is the regression model section.</p>
+                </div>
+            </div> 
+        </div>
+            {% endif %}
+        
+            {% if error %}
+                <p style="color: red;">{{ error }}</p>
+            {% endif %}
+            </div>
+
+    </div>
+</div>
+
+{% endblock %}
+{% block script %}
+
+{% block style %}
+<style>
+    .btn-group button {
+        background-color: lightblue; /* Green background */
+        border: 1px solid lightgray; /* Green border */
+        color: white; /* White text */
+        padding: 10px 24px; /* Some padding */
+        cursor: pointer; /* Pointer/hand icon */
+        float: left; /* Float the buttons side by side */
+    }
+
+    .btn-group button:not(:last-child) {
+        border-right: none; /* Prevent double borders */
+    }
+
+    /* Clear floats (clearfix hack) */
+    .btn-group:after {
+        content: "";
+        clear: both;
+        display: table;
+    }
+
+    /* Add a background color on hover */
+    .btn-group button:hover {
+        background-color: #4a80c7;
+    }
+</style>
+{% endblock style %}
+
+
+<script>
+    function showDiv(divId) {
+        // Hide all toggleDivs
+        const toggleDivs = document.querySelectorAll('.toggleDiv');
+        toggleDivs.forEach(div => div.style.display = 'none');
+
+        // Show the selected div
+        const selectedDiv = document.getElementById(divId);
+        if (selectedDiv) {
+            selectedDiv.style.display = 'block';
+        }
+    }
+</script>
+
+{% endblock script %}
