@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{%  load static %}
+
+
+{% block content %}
+
+<div class="box">
+    <div class="title-container">
+        <div class = "title">Upload a CSV File</div>
+    </div>
+
+    <div class="main-text" >
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Upload</button>
+        </form>
+          <div>
+            
+            {% if model_recommendation %}
+                <div>
+                    <h3>Recommendation</h3>
+                    <p>{{ model_recommendation }}<p>
+                </div>
+            {% endif %}
+            
+            
+            {% if dataset_summary %}
+                <div>
+                    <h3>Data Summary</h3>
+                    {% for line in dataset_summary %}
+                        <p>{{ line|safe }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {% if plot %}
+                <div id="buttons">
+                    {% for plot_name in plot.keys %}
+                        <button onclick="showPlot('{{ plot_name }}')">{{ plot_name }}</button>
+                    {% endfor %}
+                </div>
+
+                <div id="plot-container" style="margin-top: 20px;">
+                    <img id="plot-image" src="" style="max-width: 100%; display: none;" />
+                </div>
+            {% endif %}
+
+        
+            {% if error %}
+                <p style="color: red;">{{ error }}</p>
+            {% endif %}
+            </div> 
+          
+
+    </div>
+</div>
+
+{% endblock %}
+{% block script %}
+
+
+{% if plot %}
+<script>
+    const plotData = {
+        {% for key, val in plot.items %}
+            "{{ key|escapejs }}": "{{ val|escapejs }}"{% if not forloop.last %},{% endif %}
+        {% endfor %}
+    };
+
+    function showPlot(plotName) {
+        const image = document.getElementById("plot-image");
+        image.src = "data:image/png;base64," + plotData[plotName];
+        image.style.display = 'block';
+    }
+</script>
+{% endif %}
+
+{% endblock script %}

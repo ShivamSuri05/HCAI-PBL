@@ -6,12 +6,25 @@
         <link rel= "stylesheet" href="{% static 'style.css' %}">
         {% block extra_css %}{% endblock %}
         <link rel="shortcut icon" href="{% static 'favicon/favicon.ico' %}">
+            <!-- <link rel="stylesheet" 
+          href=
+"https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" /> -->
+    <!-- <script src=
+"https://code.jquery.com/jquery-1.11.1.min.js">
+    </script>
+    <script src=
+"https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js">
+    </script> -->
         <title>HCAI project</title>
         <style></style>
     </head>
     <body>
         <div class="grid-parent">
             {% block content %}
+            There are three apps:
+            Home
+            Demos
+            Media
             {%  endblock %}
         </div>
 
