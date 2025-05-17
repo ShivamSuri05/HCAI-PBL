@@ -10,36 +10,49 @@
         <div class = "title">Upload a CSV File</div>
     </div>
 
-    <div class="main-text">
+    <div class="main-text" >
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             {{ form.as_p }}
             <button type="submit">Upload</button>
         </form>
           <div>
-            {% if model_type is not None %}
-                <p><i>{{ model_type }}</i></p>
-                <div class="btn-group">
-                    <button onclick="showDiv('classificationDiv')">Classification</button>
-                    <button onclick="showDiv('regressionDiv')">Regression</button>
+            
+            {% if model_recommendation %}
+                <div>
+                    <h3>Recommendation</h3>
+                    <p>{{ model_recommendation }}<p>
                 </div>
-                <!-- Div for Classification -->
-                <div id="classificationDiv" class="toggleDiv" style="display: none;">
-                    <p>This is the classification model section.</p>
+            {% endif %}
+            
+            
+            {% if dataset_summary %}
+                <div>
+                    <h3>Data Summary</h3>
+                    {% for line in dataset_summary %}
+                        <p>{{ line|safe }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {% if plot %}
+                <div id="buttons">
+                    {% for plot_name in plot.keys %}
+                        <button onclick="showPlot('{{ plot_name }}')">{{ plot_name }}</button>
+                    {% endfor %}
                 </div>
 
-                <!-- Div for Regression -->
-                <div id="regressionDiv" class="toggleDiv" style="display: none;">
-                    <p>This is the regression model section.</p>
+                <div id="plot-container" style="margin-top: 20px;">
+                    <img id="plot-image" src="" style="max-width: 100%; display: none;" />
                 </div>
-            </div> 
-        </div>
             {% endif %}
+
         
             {% if error %}
                 <p style="color: red;">{{ error }}</p>
             {% endif %}
-            </div>
+            </div> 
+          
 
     </div>
 </div>
@@ -47,48 +60,21 @@
 {% endblock %}
 {% block script %}
 
-{% block style %}
-<style>
-    .btn-group button {
-        background-color: lightblue; /* Green background */
-        border: 1px solid lightgray; /* Green border */
-        color: white; /* White text */
-        padding: 10px 24px; /* Some padding */
-        cursor: pointer; /* Pointer/hand icon */
-        float: left; /* Float the buttons side by side */
-    }
 
-    .btn-group button:not(:last-child) {
-        border-right: none; /* Prevent double borders */
-    }
-
-    /* Clear floats (clearfix hack) */
-    .btn-group:after {
-        content: "";
-        clear: both;
-        display: table;
-    }
-
-    /* Add a background color on hover */
-    .btn-group button:hover {
-        background-color: #4a80c7;
-    }
-</style>
-{% endblock style %}
-
-
+{% if plot %}
 <script>
-    function showDiv(divId) {
-        // Hide all toggleDivs
-        const toggleDivs = document.querySelectorAll('.toggleDiv');
-        toggleDivs.forEach(div => div.style.display = 'none');
+    const plotData = {
+        {% for key, val in plot.items %}
+            "{{ key|escapejs }}": "{{ val|escapejs }}"{% if not forloop.last %},{% endif %}
+        {% endfor %}
+    };
 
-        // Show the selected div
-        const selectedDiv = document.getElementById(divId);
-        if (selectedDiv) {
-            selectedDiv.style.display = 'block';
-        }
+    function showPlot(plotName) {
+        const image = document.getElementById("plot-image");
+        image.src = "data:image/png;base64," + plotData[plotName];
+        image.style.display = 'block';
     }
 </script>
+{% endif %}
 
 {% endblock script %}
