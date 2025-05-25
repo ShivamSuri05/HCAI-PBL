@@ -19,12 +19,13 @@ class ModelTrainingForm(forms.Form):
     ]
 
     model = forms.ChoiceField(
-        choices=MODEL_CHOICES, 
+        choices=MODEL_CHOICES,
         label="Select Model"
     )
+
     label_column = forms.ChoiceField(
-        label="Target Column", 
-        choices=[]
+        label="Target Column",
+        choices=[]  # Dynamically set in the view
     )
 
     test_size = forms.FloatField(
@@ -50,7 +51,8 @@ class ModelTrainingForm(forms.Form):
         required=False,
         help_text="For Random Forest (e.g., 3,5,10)"
     )
+
     metric = forms.ChoiceField(
-        choices=METRIC_CHOICES, 
+        choices=METRIC_CHOICES,
         label="Evaluation Metric"
     )
