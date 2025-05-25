@@ -1,14 +1,10 @@
-# project1/forms.py
-
 from django import forms
+from .models import UploadedDataset
 
-
-class UploadDatasetForm(forms.Form):
-    file = forms.FileField(
-        label="Upload CSV File",
-        help_text="Upload a CSV file for model training."
-    )
-
+class UploadDatasetForm(forms.ModelForm):
+    class Meta:
+        model = UploadedDataset
+        fields = ['file']
 
 class ModelTrainingForm(forms.Form):
     MODEL_CHOICES = [
@@ -45,13 +41,11 @@ class ModelTrainingForm(forms.Form):
         required=False,
         help_text="For Logistic Regression or SVM (e.g., 0.01,0.1,1,10)"
     )
-
     n_estimators_values = forms.CharField(
         label="n_estimators (comma-separated)",
         required=False,
         help_text="For Random Forest (e.g., 10,50,100)"
     )
-
     max_depth_values = forms.CharField(
         label="max_depth (comma-separated)",
         required=False,
